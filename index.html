@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dorks for Bug Bounty by Kcoof</title>
+    <title>Dorks for all by Kcoof</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,11 +20,11 @@
             color: #69f0ae;
             text-align: center;
         }
-        label, input, button {
+        label, input, button, select {
             font-size: 1em;
             margin-bottom: 10px;
         }
-        input {
+        input, select {
             padding: 8px;
             width: 100%;
             max-width: 400px;
@@ -109,10 +109,10 @@
 </head>
 <body>
     <header>
-        <h1>Google Dorks for Bug Bounty by Kcoof</h1>
+        <h1>Dorks for all by Kcoof</h1>
         <p>
-            <a href="https://twitter.com/kcoof" target="_blank">
-                <img src="https://img.shields.io/twitter/url/https/twitter.com/kcoof.svg?style=social&label=Follow%20%40kcoof" alt="Twitter Follow Badge" class="badge">
+            <a href="https://x.com/k_CooF" target="_blank">
+                <img src="https://img.shields.io/twitter/url/https://x.com/k_CooF?style=social&label=Follow%20%40kcoof" alt="Twitter Follow Badge" class="badge">
             </a>
             <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank">GitHub Repo</a>
         </p>
@@ -121,6 +121,12 @@
         <form>
             <label for="domainInput">Enter a domain:</label>
             <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
+            <label for="searchEngine">Choose a search engine:</label>
+            <select id="searchEngine" onchange="updateSearchEngine()">
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+                <option value="duckduckgo">DuckDuckGo</option>
+            </select>
         </form>
         <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
         <ul id="dorkList"></ul>
@@ -138,9 +144,11 @@
         const domainInput = document.getElementById('domainInput');
         const tooltip = document.getElementById('tooltip');
         const dorkList = document.getElementById('dorkList');
+        const searchEngineSelect = document.getElementById('searchEngine');
         let originalDorks = [];
         let stopAppending = false;
         let prevTitle = '';
+        let currentSearchEngine = 'google'; // Default search engine
 
         domainInput.addEventListener('mouseover', () => {
             tooltip.style.display = 'block';
@@ -151,6 +159,24 @@
         domainInput.addEventListener('mouseout', () => {
             tooltip.style.display = 'none';
         });
+
+        // Function to get the search URL based on the selected engine
+        function getSearchUrl(query) {
+            switch (currentSearchEngine) {
+                case 'bing':
+                    return `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+                case 'duckduckgo':
+                    return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+                default:
+                    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Update the search engine
+        function updateSearchEngine() {
+            currentSearchEngine = searchEngineSelect.value;
+            updateDomain(); // Refresh the links with the new search engine
+        }
 
         async function fetchDorks() {
             const url = "https://raw.githubusercontent.com/Kcoof/Dorks-for-all-/main/README.md";
@@ -176,7 +202,7 @@
         }
 
         function createDorkListItem(dork, description) {
-            const googleLink = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+            const searchUrl = getSearchUrl(dork);
             const listItem = document.createElement("li");
 
             if (description && description !== prevTitle) {
@@ -188,7 +214,7 @@
             }
 
             const link = document.createElement("a");
-            link.href = googleLink;
+            link.href = searchUrl;
             link.textContent = dork;
             link.classList.add("dorkLink");
             link.target = "_blank";
@@ -212,7 +238,7 @@
                 }
 
                 link.textContent = originalDork;
-                link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+                link.href = getSearchUrl(originalDork);
             });
         }
 
