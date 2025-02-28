@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dorks for Bug Bounty</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dorks for Bug Bounty</h1>
+  
+  <p>Enter your domain to replace <code>example.com</code>:</p>
+  <input type="text" id="domainInput" placeholder="Enter domain (e.g., mydomain.com)" oninput="replaceDomain()">
+  
+  <div id="dorksContent">
+    <h2>Broad domain search w/ negative search</h2>
+    <pre>site:example.com -www</pre>
+
+    <h2>Server Errors</h2>
+    <pre>site:example.com intext:"error" | intext:"exception" | intext:"failure" | intext:"server at" | intext:exception | intext:"database error" | intext:"SQL syntax" | intext:"undefined index" | intext:"unhandled exception" | intext:"stack trace"</pre>
+    
+    <!-- Add all the other Dorks here, same as the ones you provided -->
+  </div>
+
+  <script>
+    function replaceDomain() {
+      // Get the domain input value
+      const userDomain = document.getElementById('domainInput').value.trim();
+      
+      // Check if userDomain is not empty
+      if (userDomain) {
+        // Replace example.com with the user-provided domain
+        const content = document.getElementById('dorksContent');
+        const regex = /example\.com/g; // Regex to find all instances of 'example.com'
+        
+        // Replace the domain in all <pre> tags within the content
+        const dorksText = content.innerHTML;
+        content.innerHTML = dorksText.replace(regex, userDomain);
+      } else {
+        // If the input is empty, revert back to 'example.com'
+        const content = document.getElementById('dorksContent');
+        const regex = /mydomain\.com/g; // Regex to find all instances of the custom domain
+        const dorksText = content.innerHTML;
+        content.innerHTML = dorksText.replace(regex, 'example.com');
+      }
+    }
+  </script>
+</body>
+</html>
