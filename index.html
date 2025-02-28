@@ -1,57 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dorks for Bug Bounty</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorks for Bug Bounty by Kcoof</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #212121;
+            color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #69f0ae;
+            text-align: center;
+        }
+        label, input, button {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #69f0ae;
+            border-radius: 4px;
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+        li:hover {
+            transform: translateX(5px);
+        }
+        a {
+            text-decoration: none;
+            color: #69f0ae;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        p.description {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #69f0ae;
+        }
+        section {
+            margin-top: 20px;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+        }
+        #tooltip {
+            position: absolute;
+            background-color: #000;
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+            font-size: 0.9em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        header a {
+            margin: 0 10px;
+        }
+        .badge {
+            vertical-align: middle;
+        }
+        .link-list li {
+            margin-bottom: 10px;
+        }
+        .link-list a {
+            color: #69f0ae;
+        }
+        .link-list a:hover {
+            color: #4CAF50;
+        }
+    </style>
 </head>
 <body>
-  <h1>Dorks for Bug Bounty</h1>
-  
-  <p>Enter your domain to replace <code>example.com</code>:</p>
-  <input type="text" id="domainInput" placeholder="Enter domain (e.g., mydomain.com)" oninput="replaceDomain()">
-  
-  <div id="dorksContent">
-    <h2>Broad domain search w/ negative search</h2>
-    <pre>site:example.com -www</pre>
+    <header>
+        <h1>Google Dorks for Bug Bounty by Kcoof</h1>
+        <p>
+            <a href="https://twitter.com/kcoof" target="_blank">
+                <img src="https://img.shields.io/twitter/url/https/twitter.com/kcoof.svg?style=social&label=Follow%20%40kcoof" alt="Twitter Follow Badge" class="badge">
+            </a>
+            <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank">GitHub Repo</a>
+        </p>
+    </header>
+    <main>
+        <form>
+            <label for="domainInput">Enter a domain:</label>
+            <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
+        </form>
+        <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
+        <ul id="dorkList"></ul>
+        <section>
+            <h2>Additional Resources</h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank">Dorks For all </a></li>
+                <li><a href="https://freedium.cfd/https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank"> Dorks Every Hacker Needs to Know</a></li>
+                <li><a href="https://freedium.cfd/https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank">Uncover Hidden Gems in the Cloud with Google Dorks</a></li>
+                <li><a href="https://freedium.cfd/https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank">10 Google Dorks for Sensitive Data</a></li>
+            </ul>
+        </section>
+    </main>
+    <script>
+        const domainInput = document.getElementById('domainInput');
+        const tooltip = document.getElementById('tooltip');
+        const dorkList = document.getElementById('dorkList');
+        let originalDorks = [];
+        let stopAppending = false;
+        let prevTitle = '';
 
-    <h2>Server Errors</h2>
-    <pre>site:example.com intext:"error" | intext:"exception" | intext:"failure" | intext:"server at" | intext:exception | intext:"database error" | intext:"SQL syntax" | intext:"undefined index" | intext:"unhandled exception" | intext:"stack trace"</pre>
-    
-    <!-- Add all the other Dorks here, same as the ones you provided -->
-  </div>
+        domainInput.addEventListener('mouseover', () => {
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${domainInput.offsetLeft}px`;
+            tooltip.style.top = `${domainInput.offsetTop + domainInput.offsetHeight + 5}px`;
+        });
 
-  <script>
-    function replaceDomain() {
-      // Get the domain input value
-      const userDomain = document.getElementById('domainInput').value.trim();
-      
-      // Check if userDomain is not empty
-      if (userDomain) {
-        // Replace example.com with the user-provided domain
-        const content = document.getElementById('dorksContent');
-        const regex = /example\.com/g; // Regex to find all instances of 'example.com'
-        
-        // Replace the domain in all <pre> tags within the content
-        const dorksText = content.innerHTML;
-        content.innerHTML = dorksText.replace(regex, userDomain);
-      } else {
-        // If the input is empty, revert back to 'example.com'
-        const content = document.getElementById('dorksContent');
-        const regex = /mydomain\.com/g; // Regex to find all instances of the custom domain
-        const dorksText = content.innerHTML;
-        content.innerHTML = dorksText.replace(regex, 'example.com');
-      }
-    }
-  </script>
+        domainInput.addEventListener('mouseout', () => {
+            tooltip.style.display = 'none';
+        });
+
+        async function fetchDorks() {
+            const url = "https://raw.githubusercontent.com/Kcoof/Dorks-for-all-/main/README.md";
+            const response = await fetch(url);
+            const text = await response.text();
+            const regex = /(?:^### (.+)|^> (.+))/gm;
+            let match, title = '', firstDork = true;
+
+            while ((match = regex.exec(text)) !== null) {
+                if (match[1]) {
+                    title = match[1];
+                    if (title === "Dorks that work better w/o domain") stopAppending = true;
+                } else if (match[2] && !stopAppending) {
+                    if (firstDork) {
+                        firstDork = false;
+                        continue;
+                    }
+                    const dork = match[2];
+                    originalDorks.push(dork);
+                    dorkList.appendChild(createDorkListItem(dork, title));
+                }
+            }
+        }
+
+        function createDorkListItem(dork, description) {
+            const googleLink = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+            const listItem = document.createElement("li");
+
+            if (description && description !== prevTitle) {
+                const desc = document.createElement("p");
+                desc.textContent = description;
+                desc.classList.add("description");
+                listItem.appendChild(desc);
+                prevTitle = description;
+            }
+
+            const link = document.createElement("a");
+            link.href = googleLink;
+            link.textContent = dork;
+            link.classList.add("dorkLink");
+            link.target = "_blank";
+
+            listItem.appendChild(link);
+            return listItem;
+        }
+
+        function updateDomain() {
+            const domains = domainInput.value.split(",").map(domain => domain.trim());
+            if (!domains.length) return;
+
+            document.querySelectorAll(".dorkLink").forEach((link, index) => {
+                let originalDork = originalDorks[index];
+                if (originalDork.includes("Drupal")) return;
+
+                if (/site:"?example\[?\.\]?com"?/i.test(originalDork)) {
+                    originalDork = originalDork.replace(/site:"?example\[?\.\]?com"?/gi, domains.map(d => `site:${d}`).join(" | "));
+                } else if (/["']example\[?\.\]?com["']/i.test(originalDork)) {
+                    originalDork = originalDork.replace(/["']example\[?\.\]?com["']/gi, domains.map(d => `"${d}"`).join(" | "));
+                }
+
+                link.textContent = originalDork;
+                link.href = `https://www.google.com/search?q=${encodeURIComponent(originalDork)}`;
+            });
+        }
+
+        fetchDorks();
+    </script>
 </body>
 </html>
