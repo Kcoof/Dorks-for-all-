@@ -1,6 +1,6 @@
 # bugbounty-dorks
 
-Web Application https://github.com/Kcoof/Dorks-for-all-/main/index.html
+Web Application [https://github.com/Kcoof/Dorks-for-all-/main/index.html](https://github.com/Kcoof/Dorks-for-all-/blob/main/index.html)
 
 # Dorks for Bug Bounty
 
