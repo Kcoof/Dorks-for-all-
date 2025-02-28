@@ -2,12 +2,9 @@
 
 Web Application "https://"
 
-# Google Dorks for Bug Bounty
+# Dorks for Bug Bounty
 
 A list of  Dorks for Bug Bounty
-
-[![Twitter URL](https://twitter.com/kcoof)
-</p>
 
 ---
 ### Broad domain search w/ negative search
