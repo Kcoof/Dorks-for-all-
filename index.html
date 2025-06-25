@@ -3,166 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dorks for all by Kcoof</title>
+    <title>Advanced Dork Search by Kcoof</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #212121;
-            color: #f0f0f0;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #69f0ae;
-            text-align: center;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
         }
-        label, input, button, select {
-            font-size: 1em;
-            margin-bottom: 10px;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
         }
-        input, select {
-            padding: 8px;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid #69f0ae;
-            border-radius: 4px;
-            background-color: #333;
-            color: #f0f0f0;
+        
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #333;
-            border-radius: 4px;
-            transition: transform 0.2s ease;
-        }
-        li:hover {
-            transform: translateX(5px);
-        }
-        a {
-            text-decoration: none;
-            color: #69f0ae;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        p.description {
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #69f0ae;
-        }
-        section {
-            margin-top: 20px;
-            border-top: 1px solid #444;
-            padding-top: 20px;
-        }
-        #tooltip {
-            position: absolute;
-            background-color: #000;
-            color: #fff;
-            padding: 8px;
-            border-radius: 4px;
-            display: none;
-            font-size: 0.9em;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
+        
         header {
+            grid-column: 1 / -1;
             text-align: center;
-            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(10, 15, 30, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 130, 200, 0.2);
+            margin-bottom: 20px;
         }
-        header a {
-            margin: 0 10px;
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 242, 254, 0.2);
         }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0b0f0;
+            max-width: 700px;
+            margin: 0 auto 25px;
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
         .badge {
-            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(30, 40, 70, 0.8);
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #70c0ff;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            transition: all 0.3s ease;
         }
-        .link-list li {
+        
+        .badge:hover {
+            background: rgba(50, 70, 120, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 150, 255, 0.3);
+            color: #a0d0ff;
+        }
+        
+        .card {
+            background: rgba(20, 25, 45, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 130, 200, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 100, 255, 0.25);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(80, 130, 200, 0.3);
+            color: #4facfe;
+        }
+        
+        .card-title i {
+            font-size: 1.8rem;
+            color: #00f2fe;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #88c0f0;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(80, 130, 200, 0.3);
+            background: rgba(15, 20, 35, 0.7);
+            color: #e0f0ff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.3);
+            background: rgba(10, 15, 30, 0.8);
+        }
+        
+        .domain-tip {
+            font-size: 0.85rem;
+            color: #88a0c0;
+            margin-top: 6px;
+            padding-left: 5px;
+        }
+        
+        .engine-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 15px;
+            background: rgba(30, 40, 70, 0.6);
+        }
+        
+        .google { color: #34a853; }
+        .bing { color: #008373; }
+        .duckduckgo { color: #de5833; }
+        
+        .dork-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .dork-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .dork-list::-webkit-scrollbar-track {
+            background: rgba(15, 20, 35, 0.5);
+            border-radius: 4px;
+        }
+        
+        .dork-list::-webkit-scrollbar-thumb {
+            background: #4facfe;
+            border-radius: 4px;
+        }
+        
+        .dork-item {
+            padding: 18px;
+            margin-bottom: 15px;
+            background: rgba(25, 35, 60, 0.6);
+            border-radius: 12px;
+            border-left: 4px solid #4facfe;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .dork-item:hover {
+            background: rgba(35, 50, 80, 0.8);
+            transform: translateX(5px);
+            border-left-color: #00f2fe;
+        }
+        
+        .dork-description {
+            font-weight: 600;
+            color: #4facfe;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .link-list a {
-            color: #69f0ae;
+        
+        .dork-query {
+            display: block;
+            font-family: 'Courier New', monospace;
+            background: rgba(10, 15, 30, 0.5);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #a0d0ff;
+            border: 1px solid rgba(80, 130, 200, 0.2);
+            overflow-x: auto;
+            white-space: nowrap;
         }
-        .link-list a:hover {
-            color: #4CAF50;
+        
+        .dork-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: rgba(79, 172, 254, 0.15);
+            border-radius: 8px;
+            color: #70c0ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(79, 172, 254, 0.3);
+        }
+        
+        .dork-link:hover {
+            background: rgba(79, 172, 254, 0.3);
+            color: #a0e0ff;
+            transform: translateY(-2px);
+        }
+        
+        .engine-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .gbadge { background: rgba(52, 168, 83, 0.2); color: #34a853; }
+        .bbadge { background: rgba(0, 131, 115, 0.2); color: #00d9c0; }
+        .dbadge { background: rgba(222, 88, 51, 0.2); color: #ff8c69; }
+        
+        .resources {
+            grid-column: 1 / -1;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .resource-card {
+            background: rgba(25, 35, 60, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(80, 130, 200, 0.2);
+        }
+        
+        .resource-card:hover {
+            background: rgba(35, 50, 80, 0.8);
+            transform: translateY(-5px);
+            border-color: rgba(79, 172, 254, 0.4);
+        }
+        
+        .resource-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4facfe;
+            margin-bottom: 15px;
+        }
+        
+        .resource-card p {
+            color: #a0b0d0;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #70c0ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .resource-link:hover {
+            color: #a0e0ff;
+            gap: 12px;
+        }
+        
+        footer {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+            color: #88a0c0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(80, 130, 200, 0.2);
+        }
+        
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(79, 172, 254, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0); }
+        }
+        
+        .engine-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 8px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Dorks for all by Kcoof</h1>
-        <p>
-            <a href="https://x.com/k_CooF" target="_blank">
-                <img src="https://img.shields.io/twitter/url/https://x.com/k_CooF?style=social&label=Follow%20%40kcoof" alt="Twitter Follow Badge" class="badge">
-            </a>
-            <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank">GitHub Repo</a>
-        </p>
-    </header>
-    <main>
-        <form>
-            <label for="domainInput">Enter a domain:</label>
-            <input type="text" id="domainInput" placeholder="example.com" oninput="updateDomain()">
-            <label for="searchEngine">Choose a search engine:</label>
-            <select id="searchEngine" onchange="updateSearchEngine()">
-                <option value="google">Google</option>
-                <option value="bing">Bing</option>
-                <option value="duckduckgo">DuckDuckGo</option>
-            </select>
-        </form>
-        <div id="tooltip">For multiple domains, separate by comma. e.g., example1.com, example2.com</div>
-        <ul id="dorkList"></ul>
-        <section>
-            <h2>Additional Resources</h2>
-            <ul class="link-list">
-                <li><a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank">Dorks For all </a></li>
-                <li><a href="https://freedium.cfd/https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank"> Dorks Every Hacker Needs to Know</a></li>
-                <li><a href="https://freedium.cfd/https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank">Uncover Hidden Gems in the Cloud with Google Dorks</a></li>
-                <li><a href="https://freedium.cfd/https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank">10 Google Dorks for Sensitive Data</a></li>
-            </ul>
-        </section>
-    </main>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-search"></i> Advanced Dork Search</h1>
+            <p class="subtitle">Search efficiently across Google, Bing, and DuckDuckGo with properly formatted dork queries</p>
+            <div class="badges">
+                <a href="https://x.com/k_CooF" target="_blank" class="badge">
+                    <i class="fab fa-twitter"></i> Follow @kcoof
+                </a>
+                <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank" class="badge">
+                    <i class="fab fa-github"></i> GitHub Repository
+                </a>
+            </div>
+        </header>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-cogs"></i> Configuration</h2>
+            <div class="input-group">
+                <label for="domainInput">Domain(s) to search:</label>
+                <input type="text" id="domainInput" placeholder="example.com, example.org" value="example.com">
+                <div class="domain-tip">For multiple domains, separate with commas (e.g., example.com, example.org)</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="searchEngine">Search Engine:</label>
+                <select id="searchEngine">
+                    <option value="google">Google</option>
+                    <option value="bing">Bing</option>
+                    <option value="duckduckgo">DuckDuckGo</option>
+                </select>
+            </div>
+            
+            <div class="engine-indicator">
+                <i class="fab fa-google google"></i>
+                <span>Current Engine: <span class="google">Google</span></span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-list"></i> Dork Library</h2>
+            <div class="dork-list" id="dorkList">
+                <!-- Dorks will be populated here -->
+            </div>
+        </div>
+        
+        <div class="card resources">
+            <h2 class="card-title"><i class="fas fa-book"></i> Learning Resources</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Essential Dorks</h3>
+                    <p>5 Google dorks every hacker needs to know for effective reconnaissance and vulnerability discovery.</p>
+                    <a href="https://freedium.cfd/https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank" class="resource-link">
+                        Read Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <h3><i class="fas fa-cloud"></i> Cloud Dorks</h3>
+                    <p>Uncover hidden gems in the cloud with specialized Google dorks for cloud infrastructure discovery.</p>
+                    <a href="https://freedium.cfd/https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank" class="resource-link">
+                        Read Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <h3><i class="fas fa-database"></i> Sensitive Data</h3>
+                    <p>10 powerful Google dorks specifically designed to find exposed sensitive data and information leaks.</p>
+                    <a href="https://freedium.cfd/https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank" class="resource-link">
+                        Read Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <h3><i class="fab fa-github"></i> Dorks Collection</h3>
+                    <p>Comprehensive collection of dorks for all purposes on GitHub. Continuously updated with new queries.</p>
+                    <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank" class="resource-link">
+                        Visit Repository <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Created by <span class="highlight">Kcoof</span> | Dorks for all security researchers and ethical hackers</p>
+            <p>Note: Use this tool responsibly and only for authorized security testing.</p>
+        </footer>
+    </div>
+
     <script>
+        const dorks = [
+            {
+                description: "Find exposed admin panels",
+                query: 'intitle:"admin" site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find login pages",
+                query: 'inurl:login site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find exposed documents (PDF, DOC, XLS)",
+                query: 'filetype:pdf OR filetype:doc OR filetype:docx OR filetype:xls site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find database configuration files",
+                query: 'inurl:config intext:password site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find open directories",
+                query: 'intitle:"index of" site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find WordPress admin pages",
+                query: 'inurl:/wp-admin site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find PHP info files",
+                query: '"PHP Version" intitle:phpinfo site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find Apache server status",
+                query: 'intitle:"Apache Status" site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find exposed git repositories",
+                query: 'inurl:/.git/ site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find backup files",
+                query: 'filetype:bak OR inurl:backup site:"DOMAIN"',
+                engines: ['google', 'bing', 'duckduckgo']
+            },
+            {
+                description: "Find SQL errors (Bing)",
+                query: '"A syntax error has occurred" site:DOMAIN',
+                engines: ['bing']
+            },
+            {
+                description: "Find IIS server info (Bing)",
+                query: '"# * # Microsoft IIS" site:DOMAIN',
+                engines: ['bing']
+            },
+            {
+                description: "Find exposed .env files (DDG)",
+                query: '"APP_ENV=production" site:DOMAIN',
+                engines: ['duckduckgo']
+            },
+            {
+                description: "Find exposed API keys (DDG)",
+                query: '"api_key" OR "api-key" site:DOMAIN',
+                engines: ['duckduckgo']
+            }
+        ];
+
         const domainInput = document.getElementById('domainInput');
-        const tooltip = document.getElementById('tooltip');
-        const dorkList = document.getElementById('dorkList');
         const searchEngineSelect = document.getElementById('searchEngine');
-        let originalDorks = [];
-        let stopAppending = false;
-        let prevTitle = '';
-        let currentSearchEngine = 'google'; // Default search engine
-
-        domainInput.addEventListener('mouseover', () => {
-            tooltip.style.display = 'block';
-            tooltip.style.left = `${domainInput.offsetLeft}px`;
-            tooltip.style.top = `${domainInput.offsetTop + domainInput.offsetHeight + 5}px`;
-        });
-
-        domainInput.addEventListener('mouseout', () => {
-            tooltip.style.display = 'none';
-        });
-
-        // Function to get the search URL based on the selected engine
-        function getSearchUrl(query) {
-            switch (currentSearchEngine) {
+        const dorkList = document.getElementById('dorkList');
+        const engineIndicator = document.querySelector('.engine-indicator span:last-child');
+        
+        // Initialize the dork list
+        renderDorkList();
+        
+        // Event listeners
+        domainInput.addEventListener('input', renderDorkList);
+        searchEngineSelect.addEventListener('change', updateEngineIndicator);
+        searchEngineSelect.addEventListener('change', renderDorkList);
+        
+        function updateEngineIndicator() {
+            const engine = searchEngineSelect.value;
+            engineIndicator.innerHTML = engine.charAt(0).toUpperCase() + engine.slice(1);
+            engineIndicator.className = engine;
+        }
+        
+        function getSearchUrl(query, engine) {
+            switch (engine) {
                 case 'bing':
                     return `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
                 case 'duckduckgo':
@@ -171,78 +546,69 @@
                     return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
             }
         }
-
-        // Update the search engine
-        function updateSearchEngine() {
-            currentSearchEngine = searchEngineSelect.value;
-            updateDomain(); // Refresh the links with the new search engine
-        }
-
-        async function fetchDorks() {
-            const url = "https://raw.githubusercontent.com/Kcoof/Dorks-for-all-/main/README.md";
-            const response = await fetch(url);
-            const text = await response.text();
-            const regex = /(?:^### (.+)|^> (.+))/gm;
-            let match, title = '', firstDork = true;
-
-            while ((match = regex.exec(text)) !== null) {
-                if (match[1]) {
-                    title = match[1];
-                    if (title === "Dorks that work better w/o domain") stopAppending = true;
-                } else if (match[2] && !stopAppending) {
-                    if (firstDork) {
-                        firstDork = false;
-                        continue;
-                    }
-                    const dork = match[2];
-                    originalDorks.push(dork);
-                    dorkList.appendChild(createDorkListItem(dork, title));
+        
+        function renderDorkList() {
+            const domains = domainInput.value.split(',').map(d => d.trim()).filter(d => d);
+            const engine = searchEngineSelect.value;
+            
+            dorkList.innerHTML = '';
+            
+            dorks.forEach(dork => {
+                // Skip dorks not supported by current engine
+                if (!dork.engines.includes(engine)) return;
+                
+                const domainsQuery = domains.map(d => `site:${d}`).join(' OR ');
+                let query = dork.query.replace(/site:"DOMAIN"/g, domainsQuery);
+                query = query.replace(/site:DOMAIN/g, domainsQuery);
+                
+                // Special handling for DuckDuckGo
+                if (engine === 'duckduckgo') {
+                    query = query.replace(/filetype:/g, 'ext:');
                 }
-            }
-        }
-
-        function createDorkListItem(dork, description) {
-            const searchUrl = getSearchUrl(dork);
-            const listItem = document.createElement("li");
-
-            if (description && description !== prevTitle) {
-                const desc = document.createElement("p");
-                desc.textContent = description;
-                desc.classList.add("description");
-                listItem.appendChild(desc);
-                prevTitle = description;
-            }
-
-            const link = document.createElement("a");
-            link.href = searchUrl;
-            link.textContent = dork;
-            link.classList.add("dorkLink");
-            link.target = "_blank";
-
-            listItem.appendChild(link);
-            return listItem;
-        }
-
-        function updateDomain() {
-            const domains = domainInput.value.split(",").map(domain => domain.trim());
-            if (!domains.length) return;
-
-            document.querySelectorAll(".dorkLink").forEach((link, index) => {
-                let originalDork = originalDorks[index];
-                if (originalDork.includes("Drupal")) return;
-
-                if (/site:"?example\[?\.\]?com"?/i.test(originalDork)) {
-                    originalDork = originalDork.replace(/site:"?example\[?\.\]?com"?/gi, domains.map(d => `site:${d}`).join(" | "));
-                } else if (/["']example\[?\.\]?com["']/i.test(originalDork)) {
-                    originalDork = originalDork.replace(/["']example\[?\.\]?com["']/gi, domains.map(d => `"${d}"`).join(" | "));
+                
+                // Special handling for Bing
+                if (engine === 'bing') {
+                    query = query.replace(/intitle:/g, 'title:');
                 }
-
-                link.textContent = originalDork;
-                link.href = getSearchUrl(originalDork);
+                
+                const searchUrl = getSearchUrl(query, engine);
+                
+                const engineClass = engine === 'google' ? 'gbadge' : 
+                                  engine === 'bing' ? 'bbadge' : 'dbadge';
+                
+                const engineText = engine === 'google' ? 'Google' : 
+                                 engine === 'bing' ? 'Bing' : 'DuckDuckGo';
+                
+                const dorkItem = document.createElement('div');
+                dorkItem.className = 'dork-item';
+                dorkItem.innerHTML = `
+                    <div class="engine-badge ${engineClass}">${engineText}</div>
+                    <div class="dork-description">
+                        <i class="fas fa-search"></i> ${dork.description}
+                    </div>
+                    <div class="dork-query">${query}</div>
+                    <a href="${searchUrl}" target="_blank" class="dork-link">
+                        <i class="fas fa-external-link-alt"></i> Search on ${engineText}
+                    </a>
+                `;
+                
+                dorkList.appendChild(dorkItem);
             });
+            
+            if (dorkList.children.length === 0) {
+                dorkList.innerHTML = `
+                    <div class="dork-item" style="text-align: center;">
+                        <div class="dork-description">
+                            <i class="fas fa-exclamation-triangle"></i> No dorks available
+                        </div>
+                        <p>No dorks found for the selected engine. Try selecting a different search engine.</p>
+                    </div>
+                `;
+            }
         }
-
-        fetchDorks();
+        
+        // Initialize engine indicator
+        updateEngineIndicator();
     </script>
 </body>
 </html>
