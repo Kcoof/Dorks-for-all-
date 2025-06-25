@@ -1,4 +1,4 @@
-link: https://kcoof.github.io/Dorks-for-all-/
+link: https://kcoof.github.io/Dorks-for-all-/?
 
 # Dorks for Bug Bounty
 
