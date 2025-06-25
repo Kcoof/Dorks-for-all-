@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Dork Search by Kcoof</title>
+    <title>Bug Bounty Dork Toolkit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -24,19 +24,9 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-        
-        @media (min-width: 992px) {
-            .container {
-                grid-template-columns: 1fr 1fr;
-            }
         }
         
         header {
-            grid-column: 1 / -1;
             text-align: center;
             padding: 30px 20px;
             background: rgba(10, 15, 30, 0.7);
@@ -44,7 +34,25 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(80, 130, 200, 0.2);
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff0080, #ff8c00, #ffed00, #00ff80, #00bfff, #8000ff);
+            animation: gradientSlide 10s linear infinite;
+        }
+        
+        @keyframes gradientSlide {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
         
         h1 {
@@ -92,19 +100,14 @@
             color: #a0d0ff;
         }
         
-        .card {
+        .config-card {
             background: rgba(20, 25, 45, 0.8);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(80, 130, 200, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 100, 255, 0.25);
+            margin-bottom: 30px;
         }
         
         .card-title {
@@ -113,8 +116,6 @@
             gap: 12px;
             font-size: 1.5rem;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(80, 130, 200, 0.3);
             color: #4facfe;
         }
         
@@ -124,10 +125,26 @@
         }
         
         .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-bottom: 20px;
         }
         
-        label {
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-box {
+            background: rgba(15, 20, 35, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(80, 130, 200, 0.3);
+        }
+        
+        .input-box label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
@@ -136,10 +153,10 @@
         
         input, select {
             width: 100%;
-            padding: 14px 18px;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
             border: 1px solid rgba(80, 130, 200, 0.3);
-            background: rgba(15, 20, 35, 0.7);
+            background: rgba(10, 15, 30, 0.8);
             color: #e0f0ff;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -149,13 +166,12 @@
             outline: none;
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.3);
-            background: rgba(10, 15, 30, 0.8);
         }
         
         .domain-tip {
             font-size: 0.85rem;
             color: #88a0c0;
-            margin-top: 6px;
+            margin-top: 8px;
             padding-left: 5px;
         }
         
@@ -163,9 +179,9 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 15px;
+            padding: 8px 18px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             margin-top: 15px;
             background: rgba(30, 40, 70, 0.6);
@@ -175,46 +191,71 @@
         .bing { color: #008373; }
         .duckduckgo { color: #de5833; }
         
+        .dork-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .category-card {
+            background: rgba(20, 25, 45, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 130, 200, 0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category-header {
+            padding: 20px;
+            background: rgba(30, 40, 70, 0.6);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(80, 130, 200, 0.3);
+        }
+        
+        .category-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4facfe;
+        }
+        
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .category-card.active .category-content {
+            max-height: 1000px;
+        }
+        
         .dork-list {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-        
-        .dork-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .dork-list::-webkit-scrollbar-track {
-            background: rgba(15, 20, 35, 0.5);
-            border-radius: 4px;
-        }
-        
-        .dork-list::-webkit-scrollbar-thumb {
-            background: #4facfe;
-            border-radius: 4px;
+            padding: 0 20px 20px;
         }
         
         .dork-item {
-            padding: 18px;
-            margin-bottom: 15px;
-            background: rgba(25, 35, 60, 0.6);
-            border-radius: 12px;
-            border-left: 4px solid #4facfe;
-            transition: all 0.3s ease;
-            position: relative;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(80, 130, 200, 0.2);
         }
         
-        .dork-item:hover {
-            background: rgba(35, 50, 80, 0.8);
-            transform: translateX(5px);
-            border-left-color: #00f2fe;
+        .dork-item:last-child {
+            border-bottom: none;
         }
         
         .dork-description {
             font-weight: 600;
-            color: #4facfe;
-            margin-bottom: 10px;
+            color: #a0d0ff;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -237,7 +278,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 18px;
+            padding: 8px 15px;
             background: rgba(79, 172, 254, 0.15);
             border-radius: 8px;
             color: #70c0ff;
@@ -245,6 +286,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             border: 1px solid rgba(79, 172, 254, 0.3);
+            font-size: 0.9rem;
         }
         
         .dork-link:hover {
@@ -254,28 +296,57 @@
         }
         
         .engine-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+            display: inline-block;
             padding: 4px 10px;
             border-radius: 15px;
             font-size: 0.75rem;
             font-weight: 700;
+            margin-left: 8px;
         }
         
         .gbadge { background: rgba(52, 168, 83, 0.2); color: #34a853; }
         .bbadge { background: rgba(0, 131, 115, 0.2); color: #00d9c0; }
         .dbadge { background: rgba(222, 88, 51, 0.2); color: #ff8c69; }
         
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            color: #88a0c0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(80, 130, 200, 0.2);
+        }
+        
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(79, 172, 254, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0); }
+        }
+        
         .resources {
-            grid-column: 1 / -1;
+            background: rgba(20, 25, 45, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 130, 200, 0.15);
         }
         
         .resource-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .resource-card {
@@ -298,6 +369,7 @@
             gap: 10px;
             color: #4facfe;
             margin-bottom: 15px;
+            font-size: 1.1rem;
         }
         
         .resource-card p {
@@ -313,6 +385,7 @@
             color: #70c0ff;
             text-decoration: none;
             font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
         }
         
@@ -321,45 +394,42 @@
             gap: 12px;
         }
         
-        footer {
-            grid-column: 1 / -1;
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(25, 35, 60, 0.6);
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            padding: 25px;
-            margin-top: 20px;
-            color: #88a0c0;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(80, 130, 200, 0.2);
+            min-width: 150px;
         }
         
-        .highlight {
-            color: #4facfe;
-            font-weight: 600;
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
         
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(79, 172, 254, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(79, 172, 254, 0); }
-        }
-        
-        .engine-tag {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-left: 8px;
+        .stat-label {
+            color: #88c0f0;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-search"></i> Advanced Dork Search</h1>
-            <p class="subtitle">Search efficiently across Google, Bing, and DuckDuckGo with properly formatted dork queries</p>
+            <h1><i class="fas fa-bug"></i> Bug Bounty Dork Toolkit</h1>
+            <p class="subtitle">Advanced search queries for bug bounty hunters and security researchers</p>
             <div class="badges">
                 <a href="https://x.com/k_CooF" target="_blank" class="badge">
                     <i class="fab fa-twitter"></i> Follow @kcoof
@@ -370,42 +440,56 @@
             </div>
         </header>
         
-        <div class="card">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">200+</div>
+                <div class="stat-label">Dork Queries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Search Engines</div>
+            </div>
+        </div>
+        
+        <div class="config-card">
             <h2 class="card-title"><i class="fas fa-cogs"></i> Configuration</h2>
             <div class="input-group">
-                <label for="domainInput">Domain(s) to search:</label>
-                <input type="text" id="domainInput" placeholder="example.com, example.org" value="example.com">
-                <div class="domain-tip">For multiple domains, separate with commas (e.g., example.com, example.org)</div>
-            </div>
-            
-            <div class="input-group">
-                <label for="searchEngine">Search Engine:</label>
-                <select id="searchEngine">
-                    <option value="google">Google</option>
-                    <option value="bing">Bing</option>
-                    <option value="duckduckgo">DuckDuckGo</option>
-                </select>
-            </div>
-            
-            <div class="engine-indicator">
-                <i class="fab fa-google google"></i>
-                <span>Current Engine: <span class="google">Google</span></span>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-list"></i> Dork Library</h2>
-            <div class="dork-list" id="dorkList">
-                <!-- Dorks will be populated here -->
+                <div class="input-box">
+                    <label for="domainInput">Domain(s) to search:</label>
+                    <input type="text" id="domainInput" placeholder="example.com, example.org" value="example.com">
+                    <div class="domain-tip">Separate multiple domains with commas</div>
+                </div>
+                
+                <div class="input-box">
+                    <label for="searchEngine">Search Engine:</label>
+                    <select id="searchEngine">
+                        <option value="google">Google</option>
+                        <option value="bing">Bing</option>
+                        <option value="duckduckgo">DuckDuckGo</option>
+                    </select>
+                    <div class="engine-indicator">
+                        <i class="fab fa-google google"></i>
+                        <span>Current: <span class="google">Google</span></span>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="card resources">
+        <h2 class="card-title"><i class="fas fa-folder-tree"></i> Dork Categories</h2>
+        <div class="dork-categories" id="dorkCategories">
+            <!-- Dork categories will be populated here -->
+        </div>
+        
+        <div class="resources">
             <h2 class="card-title"><i class="fas fa-book"></i> Learning Resources</h2>
             <div class="resource-grid">
                 <div class="resource-card">
                     <h3><i class="fas fa-graduation-cap"></i> Essential Dorks</h3>
-                    <p>5 Google dorks every hacker needs to know for effective reconnaissance and vulnerability discovery.</p>
+                    <p>5 Google dorks every hacker needs to know for effective reconnaissance.</p>
                     <a href="https://freedium.cfd/https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank" class="resource-link">
                         Read Article <i class="fas fa-arrow-right"></i>
                     </a>
@@ -413,7 +497,7 @@
                 
                 <div class="resource-card">
                     <h3><i class="fas fa-cloud"></i> Cloud Dorks</h3>
-                    <p>Uncover hidden gems in the cloud with specialized Google dorks for cloud infrastructure discovery.</p>
+                    <p>Uncover hidden gems in the cloud with specialized Google dorks.</p>
                     <a href="https://freedium.cfd/https://infosecwriteups.com/uncover-hidden-gems-in-the-cloud-with-google-dorks-8621e56a329d" target="_blank" class="resource-link">
                         Read Article <i class="fas fa-arrow-right"></i>
                     </a>
@@ -421,7 +505,7 @@
                 
                 <div class="resource-card">
                     <h3><i class="fas fa-database"></i> Sensitive Data</h3>
-                    <p>10 powerful Google dorks specifically designed to find exposed sensitive data and information leaks.</p>
+                    <p>10 Google dorks to find exposed sensitive data and information leaks.</p>
                     <a href="https://freedium.cfd/https://infosecwriteups.com/10-google-dorks-for-sensitive-data-9454b09edc12" target="_blank" class="resource-link">
                         Read Article <i class="fas fa-arrow-right"></i>
                     </a>
@@ -429,7 +513,7 @@
                 
                 <div class="resource-card">
                     <h3><i class="fab fa-github"></i> Dorks Collection</h3>
-                    <p>Comprehensive collection of dorks for all purposes on GitHub. Continuously updated with new queries.</p>
+                    <p>Comprehensive collection of dorks for all purposes on GitHub.</p>
                     <a href="https://github.com/Kcoof/Dorks-for-all-" target="_blank" class="resource-link">
                         Visit Repository <i class="fas fa-arrow-right"></i>
                     </a>
@@ -444,91 +528,168 @@
     </div>
 
     <script>
-        const dorks = [
+        // Comprehensive dork database organized by category
+        const dorkCategories = [
             {
-                description: "Find exposed admin panels",
-                query: 'intitle:"admin" site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Cloud Storage",
+                icon: "fa-cloud",
+                dorks: [
+                    {description: "Amazon S3 Buckets", query: 'site:s3.amazonaws.com "DOMAIN"'},
+                    {description: "Azure Blob Storage", query: 'site:blob.core.windows.net "DOMAIN"'},
+                    {description: "Google APIs", query: 'site:googleapis.com "DOMAIN"'},
+                    {description: "Google Drive Files", query: 'site:drive.google.com "DOMAIN"'},
+                    {description: "Azure DevOps", query: 'site:dev.azure.com "DOMAIN"'},
+                    {description: "OneDrive Files", query: 'site:onedrive.live.com "DOMAIN"'},
+                    {description: "DigitalOcean Spaces", query: 'site:digitaloceanspaces.com "DOMAIN"'},
+                    {description: "SharePoint Sites", query: 'site:sharepoint.com "DOMAIN"'},
+                    {description: "AWS General", query: 'site:amazonaws.com "DOMAIN"'},
+                    {description: "Dropbox Files", query: 'inurl:www.dropbox.com/s/ "DOMAIN"'},
+                    {description: "Box Files", query: 'site:box.com/s "DOMAIN"'},
+                    {description: "Google Docs", query: 'site:docs.google.com inurl:"/d/" "DOMAIN"'},
+                    {description: "AWS Config Files", query: 'inurl:config intext:access_key site:amazonaws.com "DOMAIN"'},
+                    {description: "Exposed .env Files", query: '"APP_ENV=production" site:DOMAIN'},
+                    {description: "Exposed Bucket Listings", query: 'intitle:"Index of" site:amazonaws.com "DOMAIN"'},
+                    {description: "Firebase Databases", query: 'site:firebaseio.com "DOMAIN"'}
+                ]
             },
             {
-                description: "Find login pages",
-                query: 'inurl:login site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Sensitive Data",
+                icon: "fa-file-shield",
+                dorks: [
+                    {description: "Database Config Files", query: 'inurl:config intext:password site:DOMAIN'},
+                    {description: "Exposed API Keys", query: '"api_key" OR "api-key" site:DOMAIN'},
+                    {description: "Private Keys", query: 'filetype:key OR filetype:pem site:DOMAIN'},
+                    {description: "SQL Dumps", query: 'filetype:sql "INSERT INTO" site:DOMAIN'},
+                    {description: "Backup Files", query: 'filetype:bak OR inurl:backup site:DOMAIN'},
+                    {description: "Log Files", query: 'filetype:log "error" OR "warning" site:DOMAIN'},
+                    {description: "Password Lists", query: 'filetype:txt "password" OR "passwd" site:DOMAIN'},
+                    {description: "Financial Data", query: 'filetype:xls OR filetype:xlsx "financial" site:DOMAIN'},
+                    {description: "User Credentials", query: '"username" "password" site:DOMAIN'},
+                    {description: "Git Config Files", query: 'inurl:config intext:user.name site:DOMAIN'}
+                ]
             },
             {
-                description: "Find exposed documents (PDF, DOC, XLS)",
-                query: 'filetype:pdf OR filetype:doc OR filetype:docx OR filetype:xls site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Admin Panels",
+                icon: "fa-lock-open",
+                dorks: [
+                    {description: "Admin Login Pages", query: 'intitle:"admin" site:DOMAIN'},
+                    {description: "Login Pages", query: 'inurl:login site:DOMAIN'},
+                    {description: "WordPress Admin", query: 'inurl:/wp-admin site:DOMAIN'},
+                    {description: "Drupal Admin", query: 'inurl:/user/login site:DOMAIN'},
+                    {description: "Joomla Admin", query: 'inurl:/administrator site:DOMAIN'},
+                    {description: "PHPMyAdmin", query: 'inurl:phpmyadmin site:DOMAIN'},
+                    {description: "Control Panels", query: 'intitle:"Control Panel" site:DOMAIN'},
+                    {description: "Unauthorized Dashboards", query: 'intitle:"dashboard" inurl:admin site:DOMAIN'},
+                    {description: "Test Environments", query: 'inurl:test OR inurl:staging site:DOMAIN'}
+                ]
             },
             {
-                description: "Find database configuration files",
-                query: 'inurl:config intext:password site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Vulnerable Files",
+                icon: "fa-file-code",
+                dorks: [
+                    {description: "SQL Errors", query: '"A syntax error has occurred" site:DOMAIN'},
+                    {description: "PHP Info Files", query: '"PHP Version" intitle:phpinfo site:DOMAIN'},
+                    {description: "Apache Status", query: 'intitle:"Apache Status" site:DOMAIN'},
+                    {description: "IIS Server Info", query: '"# * # Microsoft IIS" site:DOMAIN'},
+                    {description: "Git Repositories", query: 'inurl:/.git/ site:DOMAIN'},
+                    {description: "DS_Store Files", query: 'filetype:DS_Store site:DOMAIN'},
+                    {description: "Env Files", query: 'filetype:env site:DOMAIN'},
+                    {description: "Installation Files", query: 'inurl:install site:DOMAIN'},
+                    {description: "Debug Files", query: 'inurl:debug site:DOMAIN'}
+                ]
             },
             {
-                description: "Find open directories",
-                query: 'intitle:"index of" site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Open Directories",
+                icon: "fa-folder-open",
+                dorks: [
+                    {description: "Index Listings", query: 'intitle:"index of" site:DOMAIN'},
+                    {description: "Parent Directory", query: 'intitle:"parent directory" site:DOMAIN'},
+                    {description: "Open Directory", query: '"directory listing of" site:DOMAIN'},
+                    {description: "Apache Listings", query: 'intitle:"index of" "Apache" site:DOMAIN'},
+                    {description: "Nginx Listings", query: 'intitle:"index of" "nginx" site:DOMAIN'},
+                    {description: "Exposed Media", query: 'intitle:"index of" "mp3" OR "mp4" site:DOMAIN'},
+                    {description: "Exposed Documents", query: 'intitle:"index of" "pdf" OR "doc" site:DOMAIN'},
+                    {description: "Backup Directories", query: 'intitle:"index of" "backup" site:DOMAIN'},
+                    {description: "Database Dumps", query: 'intitle:"index of" "sql" site:DOMAIN'}
+                ]
             },
             {
-                description: "Find WordPress admin pages",
-                query: 'inurl:/wp-admin site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Document Search",
+                icon: "fa-file",
+                dorks: [
+                    {description: "PDF Files", query: 'filetype:pdf site:DOMAIN'},
+                    {description: "Word Documents", query: 'filetype:doc OR filetype:docx site:DOMAIN'},
+                    {description: "Excel Files", query: 'filetype:xls OR filetype:xlsx site:DOMAIN'},
+                    {description: "PowerPoint Files", query: 'filetype:ppt OR filetype:pptx site:DOMAIN'},
+                    {description: "Text Files", query: 'filetype:txt site:DOMAIN'},
+                    {description: "CSV Files", query: 'filetype:csv site:DOMAIN'},
+                    {description: "Configuration Files", query: 'filetype:conf OR filetype:config site:DOMAIN'},
+                    {description: "Backup Files", query: 'filetype:bak site:DOMAIN'},
+                    {description: "SQL Files", query: 'filetype:sql site:DOMAIN'}
+                ]
             },
             {
-                description: "Find PHP info files",
-                query: '"PHP Version" intitle:phpinfo site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "API Discovery",
+                icon: "fa-code",
+                dorks: [
+                    {description: "Swagger UI", query: 'intitle:"Swagger UI" site:DOMAIN'},
+                    {description: "OpenAPI Spec", query: 'filetype:json "openapi" site:DOMAIN'},
+                    {description: "GraphQL Endpoints", query: 'inurl:/graphql site:DOMAIN'},
+                    {description: "API Documentation", query: 'intitle:"API Documentation" site:DOMAIN'},
+                    {description: "Postman Collections", query: 'inurl:postman site:DOMAIN'},
+                    {description: "API Keys in JS", query: '"apiKey" filetype:js site:DOMAIN'},
+                    {description: "OAuth Endpoints", query: 'inurl:/oauth site:DOMAIN'},
+                    {description: "Webhook Endpoints", query: 'inurl:webhook site:DOMAIN'},
+                    {description: "SOAP Services", query: 'filetype:wsdl site:DOMAIN'}
+                ]
             },
             {
-                description: "Find Apache server status",
-                query: 'intitle:"Apache Status" site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
+                name: "Subdomains",
+                icon: "fa-sitemap",
+                dorks: [
+                    {description: "All Subdomains", query: 'site:*.DOMAIN'},
+                    {description: "Wildcard SSL Certs", query: 'inurl:*.DOMAIN -site:www.DOMAIN'},
+                    {description: "Development Sites", query: 'site:dev.*.DOMAIN'},
+                    {description: "Staging Sites", query: 'site:staging.*.DOMAIN'},
+                    {description: "Test Sites", query: 'site:test.*.DOMAIN'},
+                    {description: "Internal Sites", query: 'site:internal.*.DOMAIN'},
+                    {description: "Admin Subdomains", query: 'site:admin.*.DOMAIN'},
+                    {description: "API Subdomains", query: 'site:api.*.DOMAIN'},
+                    {description: "Legacy Systems", query: 'site:old.*.DOMAIN'}
+                ]
             },
             {
-                description: "Find exposed git repositories",
-                query: 'inurl:/.git/ site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
-            },
-            {
-                description: "Find backup files",
-                query: 'filetype:bak OR inurl:backup site:"DOMAIN"',
-                engines: ['google', 'bing', 'duckduckgo']
-            },
-            {
-                description: "Find SQL errors (Bing)",
-                query: '"A syntax error has occurred" site:DOMAIN',
-                engines: ['bing']
-            },
-            {
-                description: "Find IIS server info (Bing)",
-                query: '"# * # Microsoft IIS" site:DOMAIN',
-                engines: ['bing']
-            },
-            {
-                description: "Find exposed .env files (DDG)",
-                query: '"APP_ENV=production" site:DOMAIN',
-                engines: ['duckduckgo']
-            },
-            {
-                description: "Find exposed API keys (DDG)",
-                query: '"api_key" OR "api-key" site:DOMAIN',
-                engines: ['duckduckgo']
+                name: "Server Technologies",
+                icon: "fa-server",
+                dorks: [
+                    {description: "Apache Servers", query: '"Server: Apache" site:DOMAIN'},
+                    {description: "Nginx Servers", query: '"Server: nginx" site:DOMAIN'},
+                    {description: "IIS Servers", query: '"Server: Microsoft-IIS" site:DOMAIN'},
+                    {description: "Tomcat Servers", query: '"Server: Apache Tomcat" site:DOMAIN'},
+                    {description: "PHP Version", query: '"X-Powered-By: PHP" site:DOMAIN'},
+                    {description: "Node.js Servers", query: '"X-Powered-By: Express" site:DOMAIN'},
+                    {description: "Ruby on Rails", query: '"X-Powered-By: Ruby" site:DOMAIN'},
+                    {description: "Outdated Software", query: '"Powered by" "v1.0" site:DOMAIN'},
+                    {description: "WAF Detection", query: '"X-Firewall" OR "X-WAF" site:DOMAIN'}
+                ]
             }
         ];
 
         const domainInput = document.getElementById('domainInput');
         const searchEngineSelect = document.getElementById('searchEngine');
-        const dorkList = document.getElementById('dorkList');
+        const dorkCategoriesContainer = document.getElementById('dorkCategories');
         const engineIndicator = document.querySelector('.engine-indicator span:last-child');
         
-        // Initialize the dork list
-        renderDorkList();
+        // Initialize the dork categories
+        renderDorkCategories();
         
         // Event listeners
-        domainInput.addEventListener('input', renderDorkList);
+        domainInput.addEventListener('input', renderDorkCategories);
         searchEngineSelect.addEventListener('change', updateEngineIndicator);
-        searchEngineSelect.addEventListener('change', renderDorkList);
+        searchEngineSelect.addEventListener('change', renderDorkCategories);
+        
+        // Initialize engine indicator
+        updateEngineIndicator();
         
         function updateEngineIndicator() {
             const engine = searchEngineSelect.value;
@@ -547,68 +708,102 @@
             }
         }
         
-        function renderDorkList() {
+        function convertDorkSyntax(query, engine) {
+            // Convert syntax for DuckDuckGo
+            if (engine === 'duckduckgo') {
+                query = query.replace(/filetype:/g, 'ext:');
+                query = query.replace(/intitle:/g, 'title:');
+                query = query.replace(/inurl:/g, 'site:');
+            }
+            
+            // Convert syntax for Bing
+            if (engine === 'bing') {
+                query = query.replace(/intitle:/g, 'title:');
+            }
+            
+            return query;
+        }
+        
+        function renderDorkCategories() {
             const domains = domainInput.value.split(',').map(d => d.trim()).filter(d => d);
             const engine = searchEngineSelect.value;
             
-            dorkList.innerHTML = '';
+            dorkCategoriesContainer.innerHTML = '';
             
-            dorks.forEach(dork => {
-                // Skip dorks not supported by current engine
-                if (!dork.engines.includes(engine)) return;
-                
-                const domainsQuery = domains.map(d => `site:${d}`).join(' OR ');
-                let query = dork.query.replace(/site:"DOMAIN"/g, domainsQuery);
-                query = query.replace(/site:DOMAIN/g, domainsQuery);
-                
-                // Special handling for DuckDuckGo
-                if (engine === 'duckduckgo') {
-                    query = query.replace(/filetype:/g, 'ext:');
-                }
-                
-                // Special handling for Bing
-                if (engine === 'bing') {
-                    query = query.replace(/intitle:/g, 'title:');
-                }
-                
-                const searchUrl = getSearchUrl(query, engine);
-                
-                const engineClass = engine === 'google' ? 'gbadge' : 
-                                  engine === 'bing' ? 'bbadge' : 'dbadge';
-                
-                const engineText = engine === 'google' ? 'Google' : 
-                                 engine === 'bing' ? 'Bing' : 'DuckDuckGo';
-                
-                const dorkItem = document.createElement('div');
-                dorkItem.className = 'dork-item';
-                dorkItem.innerHTML = `
-                    <div class="engine-badge ${engineClass}">${engineText}</div>
-                    <div class="dork-description">
-                        <i class="fas fa-search"></i> ${dork.description}
+            dorkCategories.forEach(category => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.innerHTML = `
+                    <div class="category-header">
+                        <h3><i class="fas ${category.icon}"></i> ${category.name} <span class="badge">${category.dorks.length} dorks</span></h3>
+                        <i class="fas fa-chevron-down"></i>
                     </div>
-                    <div class="dork-query">${query}</div>
-                    <a href="${searchUrl}" target="_blank" class="dork-link">
-                        <i class="fas fa-external-link-alt"></i> Search on ${engineText}
-                    </a>
+                    <div class="category-content">
+                        <div class="dork-list"></div>
+                    </div>
                 `;
                 
-                dorkList.appendChild(dorkItem);
+                const dorkList = categoryCard.querySelector('.dork-list');
+                const categoryHeader = categoryCard.querySelector('.category-header');
+                
+                // Add dorks to this category
+                category.dorks.forEach(dork => {
+                    let query = dork.query;
+                    
+                    // Replace DOMAIN with actual domains
+                    domains.forEach(domain => {
+                        query = query.replace(/DOMAIN/g, domain);
+                    });
+                    
+                    // Convert syntax for the selected engine
+                    query = convertDorkSyntax(query, engine);
+                    
+                    const searchUrl = getSearchUrl(query, engine);
+                    
+                    const engineClass = engine === 'google' ? 'gbadge' : 
+                                      engine === 'bing' ? 'bbadge' : 'dbadge';
+                    
+                    const engineText = engine === 'google' ? 'Google' : 
+                                     engine === 'bing' ? 'Bing' : 'DuckDuckGo';
+                    
+                    const dorkItem = document.createElement('div');
+                    dorkItem.className = 'dork-item';
+                    dorkItem.innerHTML = `
+                        <div class="dork-description">
+                            <i class="fas fa-search"></i> ${dork.description}
+                            <span class="engine-badge ${engineClass}">${engineText}</span>
+                        </div>
+                        <div class="dork-query">${query}</div>
+                        <a href="${searchUrl}" target="_blank" class="dork-link">
+                            <i class="fas fa-external-link-alt"></i> Search on ${engineText}
+                        </a>
+                    `;
+                    
+                    dorkList.appendChild(dorkItem);
+                });
+                
+                // Toggle category visibility
+                categoryHeader.addEventListener('click', () => {
+                    categoryCard.classList.toggle('active');
+                    const icon = categoryHeader.querySelector('.fa-chevron-down');
+                    if (categoryCard.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+                
+                dorkCategoriesContainer.appendChild(categoryCard);
             });
             
-            if (dorkList.children.length === 0) {
-                dorkList.innerHTML = `
-                    <div class="dork-item" style="text-align: center;">
-                        <div class="dork-description">
-                            <i class="fas fa-exclamation-triangle"></i> No dorks available
-                        </div>
-                        <p>No dorks found for the selected engine. Try selecting a different search engine.</p>
-                    </div>
-                `;
+            // Open first category by default
+            if (dorkCategoriesContainer.firstChild) {
+                dorkCategoriesContainer.firstChild.classList.add('active');
+                dorkCategoriesContainer.firstChild.querySelector('.fa-chevron-down').classList.replace('fa-chevron-down', 'fa-chevron-up');
             }
         }
-        
-        // Initialize engine indicator
-        updateEngineIndicator();
     </script>
 </body>
 </html>
